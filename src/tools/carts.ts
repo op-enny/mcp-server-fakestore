@@ -4,7 +4,7 @@
 
 import { get, post, put, del } from '../utils/api.js';
 import { Cart, CartProduct, SortOrder } from '../types/fakestore.js';
-import { validatePositiveInteger, validateSortOrder, validateLimit } from '../utils/validators.js';
+import { validatePositiveInteger, validateSortOrder, validateLimit, validateISODate, validateNonEmptyArray } from '../utils/validators.js';
 
 /**
  * Get all carts with optional limit and sort
@@ -55,14 +55,8 @@ export async function addCart(args: {
   const { userId, date, products } = args;
 
   validatePositiveInteger(userId, 'User ID');
-
-  if (!date || typeof date !== 'string') {
-    throw new Error('Date must be a non-empty string');
-  }
-
-  if (!Array.isArray(products) || products.length === 0) {
-    throw new Error('Products must be a non-empty array');
-  }
+  validateISODate(date, 'Date');
+  validateNonEmptyArray<CartProduct>(products, 'Products');
 
   // Validate each product in the cart
   products.forEach((product, index) => {
@@ -98,11 +92,12 @@ export async function updateCart(args: {
     validatePositiveInteger(userId, 'User ID');
     updateData.userId = userId;
   }
-  if (date !== undefined) updateData.date = date;
+  if (date !== undefined) {
+    validateISODate(date, 'Date');
+    updateData.date = date;
+  }
   if (products !== undefined) {
-    if (!Array.isArray(products) || products.length === 0) {
-      throw new Error('Products must be a non-empty array');
-    }
+    validateNonEmptyArray<CartProduct>(products, 'Products');
     updateData.products = products;
   }
 

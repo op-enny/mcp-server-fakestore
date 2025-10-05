@@ -4,7 +4,7 @@
 
 import { get, post, put, del } from '../utils/api.js';
 import { User, SortOrder } from '../types/fakestore.js';
-import { validatePositiveInteger, validateSortOrder, validateLimit } from '../utils/validators.js';
+import { validatePositiveInteger, validateSortOrder, validateLimit, validateEmail, validatePhone } from '../utils/validators.js';
 
 /**
  * Get all users with optional limit and sort
@@ -68,9 +68,9 @@ export async function addUser(args: {
   } = args;
 
   // Basic validation
-  if (!email || typeof email !== 'string') {
-    throw new Error('Email must be a non-empty string');
-  }
+  validateEmail(email);
+  validatePhone(phone);
+
   if (!username || typeof username !== 'string') {
     throw new Error('Username must be a non-empty string');
   }
@@ -143,10 +143,16 @@ export async function updateUser(args: {
   validatePositiveInteger(id, 'User ID');
 
   const updateData: Record<string, unknown> = {};
-  if (email !== undefined) updateData.email = email;
+  if (email !== undefined) {
+    validateEmail(email);
+    updateData.email = email;
+  }
   if (username !== undefined) updateData.username = username;
   if (password !== undefined) updateData.password = password;
-  if (phone !== undefined) updateData.phone = phone;
+  if (phone !== undefined) {
+    validatePhone(phone);
+    updateData.phone = phone;
+  }
 
   // Handle name updates
   if (firstname !== undefined || lastname !== undefined) {

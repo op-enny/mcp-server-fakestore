@@ -53,3 +53,24 @@ export function sanitizePathSegment(value: string): string {
   // Encode URI component and trim whitespace
   return encodeURIComponent(value.trim());
 }
+
+export function validateISODate(value: unknown, fieldName: string): void {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}/.test(value)) {
+    throw new Error(`${fieldName} must be in ISO format (YYYY-MM-DD)`);
+  }
+}
+
+export function validateNonEmptyArray<T>(
+  value: unknown,
+  fieldName: string
+): asserts value is T[] {
+  if (!Array.isArray(value) || value.length === 0) {
+    throw new Error(`${fieldName} must be a non-empty array`);
+  }
+}
+
+export function validatePhone(value: unknown): void {
+  if (typeof value !== 'string' || value.trim().length < 10) {
+    throw new Error('Phone number must be at least 10 characters');
+  }
+}
