@@ -26,11 +26,15 @@
     "claude",
     "ai"
   ],
-  "author": "MCP Community",
+  "author": "op-enny",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/mcp-server-fakestore"
+    "url": "https://github.com/op-enny/mcp-server-fakestore"
+  },
+  "homepage": "https://github.com/op-enny/mcp-server-fakestore#readme",
+  "bugs": {
+    "url": "https://github.com/op-enny/mcp-server-fakestore/issues"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
