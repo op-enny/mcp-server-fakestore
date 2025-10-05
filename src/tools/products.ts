@@ -4,7 +4,7 @@
 
 import { get, post, put, del } from '../utils/api.js';
 import { Product, SortOrder } from '../types/fakestore.js';
-import { validatePositiveInteger, validateSortOrder, validateLimit } from '../utils/validators.js';
+import { validatePositiveInteger, validateSortOrder, validateLimit, validateUrl, sanitizePathSegment } from '../utils/validators.js';
 
 /**
  * Get all products with optional limit and sort
@@ -50,7 +50,8 @@ export async function getProductsByCategory(args: { category: string }): Promise
   if (!category || typeof category !== 'string') {
     throw new Error('Category must be a non-empty string');
   }
-  return get<Product[]>(`/products/category/${category}`);
+  const sanitizedCategory = sanitizePathSegment(category);
+  return get<Product[]>(`/products/category/${sanitizedCategory}`);
 }
 
 /**
@@ -74,9 +75,7 @@ export async function addProduct(args: {
   if (!description || typeof description !== 'string') {
     throw new Error('Description must be a non-empty string');
   }
-  if (!image || typeof image !== 'string') {
-    throw new Error('Image URL must be a non-empty string');
-  }
+  validateUrl(image, 'Image URL');
   if (!category || typeof category !== 'string') {
     throw new Error('Category must be a non-empty string');
   }
@@ -108,7 +107,10 @@ export async function updateProduct(args: {
   if (title !== undefined) updateData.title = title;
   if (price !== undefined) updateData.price = price;
   if (description !== undefined) updateData.description = description;
-  if (image !== undefined) updateData.image = image;
+  if (image !== undefined) {
+    validateUrl(image, 'Image URL');
+    updateData.image = image;
+  }
   if (category !== undefined) updateData.category = category;
 
   return put<Product>(`/products/${id}`, updateData);

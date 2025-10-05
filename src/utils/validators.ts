@@ -33,3 +33,23 @@ export function validateEmail(value: unknown): void {
     throw new Error('Invalid email format');
   }
 }
+
+export function validateUrl(value: unknown, fieldName: string): void {
+  if (typeof value !== 'string' || value.trim().length === 0) {
+    throw new Error(`${fieldName} must be a non-empty string`);
+  }
+  try {
+    const url = new URL(value);
+    // Only allow http and https protocols
+    if (!['http:', 'https:'].includes(url.protocol)) {
+      throw new Error(`${fieldName} must use HTTP or HTTPS protocol`);
+    }
+  } catch {
+    throw new Error(`${fieldName} must be a valid URL`);
+  }
+}
+
+export function sanitizePathSegment(value: string): string {
+  // Encode URI component and trim whitespace
+  return encodeURIComponent(value.trim());
+}

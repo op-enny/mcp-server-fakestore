@@ -8,6 +8,13 @@ import { ApiError } from '../types/fakestore.js';
 const BASE_URL = 'https://fakestoreapi.com';
 
 /**
+ * Rate limiting configuration
+ */
+let requestCount = 0;
+const RATE_LIMIT = 100; // requests per minute
+const RATE_LIMIT_WINDOW = 60000; // 1 minute in milliseconds
+
+/**
  * Create axios instance with base configuration
  */
 const api = axios.create({
@@ -16,6 +23,21 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+});
+
+/**
+ * Rate limiting interceptor
+ */
+api.interceptors.request.use((config) => {
+  requestCount++;
+  if (requestCount > RATE_LIMIT) {
+    throw new Error(`Rate limit exceeded. Maximum ${RATE_LIMIT} requests per minute allowed.`);
+  }
+  // Reset counter after time window
+  setTimeout(() => {
+    if (requestCount > 0) requestCount--;
+  }, RATE_LIMIT_WINDOW);
+  return config;
 });
 
 /**
