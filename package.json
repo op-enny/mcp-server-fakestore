@@ -1,0 +1,46 @@
+{
+  "name": "mcp-server-fakestore",
+  "version": "1.0.0",
+  "description": "MCP server for Fake Store API - A beginner-friendly e-commerce data integration",
+  "type": "module",
+  "bin": {
+    "mcp-server-fakestore": "./build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc && chmod +x build/index.js",
+    "prepare": "npm run build",
+    "watch": "tsc --watch",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "fakestore",
+    "fake-store-api",
+    "ecommerce",
+    "api",
+    "shopping",
+    "claude",
+    "ai"
+  ],
+  "author": "MCP Community",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/mcp-server-fakestore"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "axios": "^1.7.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
